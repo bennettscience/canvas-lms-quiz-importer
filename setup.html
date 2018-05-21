@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css">
+  </head>
+  <body>
+    <form id="apiKeys">
+      <p>Canvas ID: <input name="id" value="" /></p>
+      <p>Canvas key: <input name="key" value="" /></p>
+      <input class="action" type="submit" value="Save Settings" onclick="event.preventDefault(); google.script.run.withSuccessHandler(onSuccess).storeApiKeys(this.parentNode)" />
+    </form>
+    <div id="msg"></div>
+    <script>
+    function onSuccess(msg) {
+      document.getElementById("msg").innerHTML = msg
+    }
+    </script>
+  </body>
+</html>
+
+

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css">
+    <style>
+      button { display:block; margin-bottom:10px; margin-left:12px; }
+      .hidden { display: none; }
+    </style>
+    <base target="_top">
+  </head>
+  <body>
+    <div id="main">
+      <div id="course-data">
+        <select id="courses" onchange="getQuizzes(this.value)"><option value="0">Select a course</option></select>
+        <select id="quizzes"><option value="0">Select a quiz</option></select>
+      </div>
+      <div id="questions">
+        <p>Total questions: <span id="num-questions"><?!= getNumQuestions(); ?></span></p>
+        <p>Next row to upload: <span id="upload-start"><?= checkLastRow(); ?></span></p>
+        <p>Questions to upload: <input title="Leave blank to upload all rows." alt="Leave blank to upload all rows." id="upload-questions" value="" required/></p>
+      </div>
+      <button class="action" onclick="google.script.run.withSuccessHandler(loopSheet).readSheet(document.getElementById('upload-questions').value)">Run</button>
+      <hr />
+      <h3>Status</h3>
+      <div id="status">Processing row: <span id="counter"></span></div>
+      <h3>Errors</h3>
+      <div>
+        <ul id="failure"></ul>
+      </div>
+    </div>
+    <script>
+      window.onload = function() {
+        google.script.run.withSuccessHandler(function(data) {
+          var select = document.getElementById('courses');
+          for(var i=0; i<data.length; i++) {
+            var opt = document.createElement('option');
+            opt.text = data[i].name;
+            opt.value = data[i].id;
+            select.appendChild(opt);
+          }
+        }).getClasses()
+      
+      }
+    </script>
+    
+    <script>
+      function getQuizzes(id) {
+        var select = document.getElementById('quizzes');
+        select.innerHTML = ""
+        google.script.run.withSuccessHandler(function(data){
+          
+          
+          for(var i=0; i<data.length; i++) {
+            var opt = document.createElement('option');
+            opt.text = data[i].title;
+            opt.value = data[i].id;
+            select.appendChild(opt);
+          }
+        }).getCourseQuizzes(id)
+      }
+    </script>
+    
+    <script>
+      function loopSheet(data) {
+
+        var count = <?!= checkLastRow(); ?>;
+
+        document.getElementById("failure").innerHTML = "";
+        var courseId = document.getElementById('courses').value
+        var quizId = document.getElementById('quizzes').value
+      
+        for(var i=0; i<data.length; i++) {
+          document.getElementById("counter").innerHTML = count;
+          google.script.run.withSuccessHandler(function() {
+            document.getElementById("counter").innerHTML = count;
+          }).withFailureHandler(function(msg) {
+            document.getElementById("failure").innerHTML += "<li>Failied on row: " + (count) + ", " + msg + "</li>";
+          }).sendQuestion(data[i], count, courseId, quizId);
+          count++
+        }
+      }
+    </script>
+  </body>
+</html>
+
+
