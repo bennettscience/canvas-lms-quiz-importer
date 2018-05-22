@@ -3,10 +3,17 @@ function getBase() {
 }
 
 function auth() {
-  var canvasService = getCanvasService();
+  var props = getProps();
+  Logger.log(props);
+  if(props.auth == "school") {
+    var canvasService = getCanvasService();
+    var key = canvasService.getAccessToken();
+  } else {
+    key = props.key
+  }
   
   var headers = {
-    "Authorization": "Bearer " + canvasService.getAccessToken(),
+    "Authorization": "Bearer " + key,
     "Content-Type":"application/json"
   }
   

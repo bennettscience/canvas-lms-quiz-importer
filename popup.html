@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css">
+    <style>
+      label { display:block; margin-bottom: 5px; }
+      input[type=text] { 
+        width: 100%;
+        line-height: 1.2rem;
+        font-size:0.8rem;
+        margin-bottom: 5px;
+      }
+      #login {
+        display: block;
+        width: 20%;
+        font-size: 1.2rem;
+        color: #fff;
+        background: -webkit-linear-gradient(top, #4d90fe, #4787ed);
+        border: 1px solid #3079ed;
+        padding: 10px;
+        text-align: center;
+        cursor:pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <p>Thank you for installing the Canvas Quiz Importer Addon. The goal is to make quiz question creation fast and easy for teams working together.</p>
+      <p>There are two methods for installation. Do you want to use whole-school configuration or personal configuration?</p>
+      <form id="config">
+        <label><input type="radio" name="config" value="personal" />Personal Use</label>
+        <label><input type="radio" name="config" value="school" />Whole School</label>
+        <input class="action" type="submit" value="Select" onclick="event.preventDefault(); google.script.run.withSuccessHandler(onSuccess).installSelect(this.parentNode)" />
+      </form>
+    </div>
+    <script>
+    function onSuccess(body) {
+      document.getElementById("container").innerHTML = body
+    }
+    </script>
+    <script>
+
+    function showMsg(msg) {
+      var result = document.getElementById('result');
+      result.innerHTML = msg;
+    }
+    
+    function showLoginButton(url) {
+      var base = "<?= PropertiesService.getDocumentProperties().getProperty('base'); ?>"
+              
+      var result = document.getElementById('result');
+      var login = document.getElementById('login');
+      
+      if(!base) {
+        login.innerHTML = '';
+      } else {
+        var btn = document.createElement('a');
+        
+        if(!url) {
+          url = "<?!= getAuthorizationUrl(); ?>"
+        }
+        
+        btn.setAttribute("href",url);
+        
+        btn.target = "blank";
+        btn.innerHTML = "Login";
+
+        login.appendChild(btn);
+      }
+    }
+    
+    function validateText(url) {
+      if (url.indexOf("http://") == 0 || url.indexOf("https://") == 0) {
+        console.log("Setting URL...")
+        google.script.run.withSuccessHandler(onSuccess).setBaseUrl(url);
+      } else {
+        console.log("Adding protocol and setting URL...");
+        google.script.run.withSuccessHandler(onSuccess).setBaseUrl("https://" + url);
+      }
+    }
+    
+  </script>
+  </body>
+</html>
+
+

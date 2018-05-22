@@ -1,13 +1,40 @@
-function storeApiKeys(form) {
+function storeSchoolKeys(form) {
   PropertiesService.getDocumentProperties().setProperties(form)
   
   SpreadsheetApp.getUi().createAddonMenu().addItem("Login", "login").addToUi();
   
-  return "Success. You may close this window and use the Addon Menu to log into Canvas."
+  var ss = spreadsheetSetup()
+  
+  if(ss) {
+    return HtmlService.createTemplateFromFile('auth').evaluate().getContent();
+  }
+}
+
+function storePersonalKey(form) {
+  PropertiesService.getDocumentProperties().setProperties(form);
+  SpreadsheetApp.getUi().createAddonMenu().addItem("Run", "openSidebar").addItem("Logout", "reset").addToUi();
+  return "<p>Your account is now ready to use. Open the Addon menu and click 'Run' to open the upload dialog in a sidebar.</p>"
+}
+
+function spreadsheetSetup() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  if(ss.getSheetByName("QuizTemplate") == null) {
+    var sheet = ss.insertSheet('QuizTemplate')
+    
+    sheet.getRange(1, 1, 1, 10).setValues([ ['Question Type','Description','Correct Answer','Distractor','Distractor','Distractor','Distractor','Topic','Primary Standard Indicator','Success'] ]);
+    sheet.setColumnWidths(1, 2, 300).setFrozenRows(1);
+    
+    var validationRange = sheet.getRange(2,1,50,1);
+    var rule = SpreadsheetApp.newDataValidation().requireValueInList(["multiple_choice_question","true_false_question"], true);
+    
+    validationRange.setDataValidation(rule);
+  }
+  
+  return true;
 }
 
 function setup() {
-  return SpreadsheetApp.getUi().showModalDialog(HtmlService.createTemplateFromFile("setup").evaluate(), "Connect to Canvas")
+  return SpreadsheetApp.getUi().showModalDialog(HtmlService.createTemplateFromFile("popup").evaluate(), "Connect to Canvas")
 }
 
 function login() {
@@ -22,9 +49,8 @@ function clearBaseUrl() {
 function setBaseUrl(url) {
   Logger.log(url);
   PropertiesService.getDocumentProperties().setProperty("base", url)
-  
-  var canvasService = getCanvasService();
-  return canvasService.getAuthorizationUrl();
+
+  return HtmlService.createTemplateFromFile("login").evaluate().getContent();
 }
 
 function getBaseUrl() {
@@ -67,20 +93,24 @@ function authCallback(request) {
 }
 
 function reset() {
-  var canvasService = getCanvasService()
-  var options = {
-    "method": "delete",
-    "headers": {
-      "Authorization": "Bearer " + canvasService.getAccessToken(),
-      "Content-Type": "application/json"
+  var props = getProps();
+  if(props.auth == "school") {
+    var canvasService = getCanvasService()
+    var options = {
+      "method": "delete",
+      "headers": {
+        "Authorization": "Bearer " + canvasService.getAccessToken(),
+        "Content-Type": "application/json"
+      }
     }
+    UrlFetchApp.fetch(canvasService.tokenUrl_, options)
+    canvasService.reset()
+    var ui = SpreadsheetApp.getUi();
+    ui.createAddonMenu().addItem("Setup", "setup").addToUi();
+    
+    PropertiesService.getDocumentProperties().deleteAllProperties()
+  } else {
+    PropertiesService.getDocumentProperties().deleteAllProperties()
+    ui.createAddonMenu().addItem("Setup", "setup").addToUi();
   }
-  UrlFetchApp.fetch(canvasService.tokenUrl_, options)
-  canvasService.reset()
-  var ui = SpreadsheetApp.getUi();
-  ui.createAddonMenu().addItem("Login", "login").addToUi();
-}
-
-function clear() {
-  PropertiesService.getDocumentProperties().deleteAllProperties()
 }

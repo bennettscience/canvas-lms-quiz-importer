@@ -1,0 +1,9 @@
+<h2>Personal API Key</h2>
+<p>To interact with Canvas, you need to give the addon access to your account. It will read and write data on your behalf. You can revoke access at any time by deleting the key from your Canvas account.</p>
+<p>To get your API Key, ADD INSTRUCTIONS HERE</p>
+<form id="personalApiKey">
+  Api Key: <input type="text" name="key" value="" />
+  Canvas URL: <input type="text" name="base" value="" placeholder="https://school.instructure.com" />
+  <input class="action" type="submit" value="Save Settings" onclick="event.preventDefault(); google.script.run.withSuccessHandler(onSuccess).storePersonalKey(this.parentNode)" />
+</form>
+<button onclick="google.script.run.withSuccessHandler(onSuccess).goBack('setup')">Back</button>

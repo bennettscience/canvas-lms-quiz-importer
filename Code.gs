@@ -10,10 +10,15 @@ function onInstall(e) {
 
 function onOpen(e) {
   var ui = SpreadsheetApp.getUi();
+  
   if(e && e.authMode == ScriptApp.AuthMode.NONE) {
     ui.createAddonMenu().addItem("Setup", "setup").addToUi();
   } else {
-    var canvasService = getCanvasService();
+    if(PropertiesService.getDocumentProperties().getProperty("auth") == "personal") {
+      ui.createAddonMenu().addItem("Run", "openSidebar");
+    } else {
+      var canvasService = getCanvasService();
+    }
     if(canvasService.hasAccess()) {
       ui.createAddonMenu().addItem("Login", "login").addItem("Logout", "reset").addItem("Run", "openSidebar").addToUi();
     } else {
@@ -26,19 +31,41 @@ function onOpen(e) {
   }
 }
 
+function installSelect(type) {
+  if(type.config == "school") {
+    PropertiesService.getDocumentProperties().setProperty("auth", "school")
+    return HtmlService.createHtmlOutputFromFile('schoolForm').getContent();
+    
+  } else if(type.config == "personal") {
+    PropertiesService.getDocumentProperties().setProperty("auth", "personal");
+    return HtmlService.createHtmlOutputFromFile('personalForm').getContent();
+  } else {
+    return ContentService.createTextOutput('<p>Something went wrong.<p>')
+  }
+}
+
+function goBack(loc) {
+  Logger.log(loc)
+  return HtmlService.createHtmlOutputFromFile(loc).getContent();
+}
+
 function openSidebar() {
   var template = HtmlService.createTemplateFromFile("index").evaluate()
   Logger.log(template);
   SpreadsheetApp.getUi().showSidebar(template);
 }
 
+function getProps() {
+  return PropertiesService.getDocumentProperties().getProperties();
+}
+
 function getNumQuestions() {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1");
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("QuizTemplate");
   return sheet.getLastRow()-1;
 }
 
 function readSheet(n) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Sheet1');
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('QuizTemplate');
   if(n == "") {
     n = sheet.getLastRow();
   }
@@ -50,7 +77,7 @@ function readSheet(n) {
 }
 
 function checkLastRow() {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Sheet1');
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('QuizTemplate');
   var range = sheet.getRange(2, 1, sheet.getLastRow(), sheet.getLastColumn()).getValues();
   for(var i=0; i<range.length; i++) {
     if(!range[i][9]) {
@@ -60,7 +87,7 @@ function checkLastRow() {
 }
 
 function sendQuestion(data, i, courseId, quizId) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1");
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("QuizTemplate");
 
   var title = data[8].toString();
   var item = buildQuestion(data,title)

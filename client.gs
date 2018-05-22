@@ -19,28 +19,16 @@ function checkAuth() {
 }
 
 function getClasses() {
-  var canvasService = getCanvasService();
+  var url = "courses"
 
-  if(canvasService.hasAccess()) {
-    var url = "courses"
-
-    var classes = get(url);
-    
-    Logger.log("Classes are: %s", JSON.parse(classes))
-    Logger.log(typeof classes);
-    Logger.log("This user has %s classes", classes.length)
-  }
+  var classes = get(url);
   return JSON.parse(classes)
 }
 
 function getCourseQuizzes(id) {
-  var canvasService = getCanvasService();
-  
-  if(canvasService.hasAccess()) {
-    var url = "courses/" + id + "/quizzes"
+  var url = "courses/" + id + "/quizzes"
     
-    var quizzes = get(url)
+  var quizzes = get(url)
     
-    return JSON.parse(quizzes);
-  }
+  return JSON.parse(quizzes);
 }
