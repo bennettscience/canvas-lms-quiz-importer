@@ -34,7 +34,7 @@ function spreadsheetSetup() {
 }
 
 function setup() {
-  return SpreadsheetApp.getUi().showModalDialog(HtmlService.createTemplateFromFile("popup").evaluate(), "Connect to Canvas")
+  return SpreadsheetApp.getUi().showModalDialog(HtmlService.createTemplateFromFile("popup").evaluate().setHeight(500).setWidth(700), "Connect to Canvas")
 }
 
 function login() {
@@ -93,6 +93,7 @@ function authCallback(request) {
 }
 
 function reset() {
+  var ui = SpreadsheetApp.getUi();
   var props = getProps();
   if(props.auth == "school") {
     var canvasService = getCanvasService()

@@ -11,14 +11,14 @@ function onInstall(e) {
 function onOpen(e) {
   var ui = SpreadsheetApp.getUi();
   
+  Logger.log(e);
+  
   if(e && e.authMode == ScriptApp.AuthMode.NONE) {
     ui.createAddonMenu().addItem("Setup", "setup").addToUi();
   } else {
     if(PropertiesService.getDocumentProperties().getProperty("auth") == "personal") {
-      ui.createAddonMenu().addItem("Run", "openSidebar");
-    } else {
-      var canvasService = getCanvasService();
-    }
+      ui.createAddonMenu().addItem("Run", "openSidebar").addToUi();
+    } 
     if(canvasService.hasAccess()) {
       ui.createAddonMenu().addItem("Login", "login").addItem("Logout", "reset").addItem("Run", "openSidebar").addToUi();
     } else {
@@ -50,7 +50,7 @@ function goBack(loc) {
 }
 
 function openSidebar() {
-  var template = HtmlService.createTemplateFromFile("index").evaluate()
+  var template = HtmlService.createTemplateFromFile("index").evaluate().setTitle("Canvas Quiz Importer")
   Logger.log(template);
   SpreadsheetApp.getUi().showSidebar(template);
 }

@@ -1,8 +1,8 @@
 <h2>Whole School Setup</h2>
 <p>You've selected a whole-school configuration. To continue, contact your technical support staff and ask for the Canvas Developer ID and Key they created for the addon.</p>
 <form id="apiKeys">
-  <p>Canvas ID: <input type="text" name="id" value="" /></p>
-  <p>Canvas key: <input type="text" name="key" value="" /></p>
+  <p>Canvas Developer Key ID: <input type="text" name="id" value="" /></p>
+  <p>Canvas Developer Key: <input type="text" name="key" value="" /></p>
   <input class="action" type="submit" value="Save Settings" onclick="event.preventDefault(); google.script.run.withSuccessHandler(onSuccess).storeSchoolKeys(this.parentNode)" />
 </form>
 

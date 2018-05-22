@@ -11,6 +11,7 @@
         font-size:0.8rem;
         margin-bottom: 5px;
       }
+      button { margin: 10px 0 0 0; }
       #login {
         display: block;
         width: 20%;
@@ -40,36 +41,6 @@
     }
     </script>
     <script>
-
-    function showMsg(msg) {
-      var result = document.getElementById('result');
-      result.innerHTML = msg;
-    }
-    
-    function showLoginButton(url) {
-      var base = "<?= PropertiesService.getDocumentProperties().getProperty('base'); ?>"
-              
-      var result = document.getElementById('result');
-      var login = document.getElementById('login');
-      
-      if(!base) {
-        login.innerHTML = '';
-      } else {
-        var btn = document.createElement('a');
-        
-        if(!url) {
-          url = "<?!= getAuthorizationUrl(); ?>"
-        }
-        
-        btn.setAttribute("href",url);
-        
-        btn.target = "blank";
-        btn.innerHTML = "Login";
-
-        login.appendChild(btn);
-      }
-    }
-    
     function validateText(url) {
       if (url.indexOf("http://") == 0 || url.indexOf("https://") == 0) {
         console.log("Setting URL...")
