@@ -12,7 +12,7 @@ function storeSchoolKeys(form) {
 
 function storePersonalKey(form) {
   PropertiesService.getDocumentProperties().setProperties(form);
-  SpreadsheetApp.getUi().createAddonMenu().addItem("Run", "openSidebar").addItem("Logout", "reset").addToUi();
+  SpreadsheetApp.getUi().createAddonMenu().addItem("Run", "openSidebar").addItem("Logout", "reset").addSeparator().addItem("Help", "showHelp").addToUi();
   return "<p>Your account is now ready to use. Open the Addon menu and click 'Run' to open the upload dialog in a sidebar.</p>"
 }
 

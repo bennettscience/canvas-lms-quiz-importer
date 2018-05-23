@@ -31,6 +31,10 @@ function onOpen(e) {
   }
 }
 
+function showHelp() {
+  return SpreadsheetApp.getUi().showModalDialog(HtmlService.createHtmlOutputFromFile("help").setHeight(500).setWidth(700), "Canvas Quiz Uploader Help");
+}
+
 function installSelect(type) {
   if(type.config == "school") {
     PropertiesService.getDocumentProperties().setProperty("auth", "school")
@@ -50,7 +54,7 @@ function goBack(loc) {
 }
 
 function openSidebar() {
-  var template = HtmlService.createTemplateFromFile("index").evaluate().setTitle("Canvas Quiz Importer")
+  var template = HtmlService.createTemplateFromFile("index").evaluate().setTitle("Canvas Quiz Uploader")
   Logger.log(template);
   SpreadsheetApp.getUi().showSidebar(template);
 }
