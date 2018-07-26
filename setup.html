@@ -27,12 +27,21 @@
   </head>
   <body>
     <div id="container">
-      <p>Thank you for installing the Canvas Quiz Importer Addon. The goal is to make quiz question creation fast and easy for teams working together.</p>
-      <p>There are two methods for installation. Do you want to use whole-school configuration or personal configuration?</p>
-      <form id="config">
-        <label><input type="radio" name="config" value="personal" />Personal Use</label>
-        <label><input type="radio" name="config" value="school" />Whole School</label>
-        <input class="action" type="submit" value="Select" onclick="event.preventDefault(); google.script.run.withSuccessHandler(onSuccess).installSelect(this.parentNode)" />
+      <p>Thanks for copying the Canvas Assessment Manager. The goal is to make quiz question creation fast and easy for teams working together.</p>
+      <p>To interact with Canvas, you need to give the addon access to your account. It will read and write data on your behalf. You can revoke access at any time by deleting the key from your Canvas account.</p>
+      <p>To get your API Key, do the following:</p>
+      <ol>
+      <li>Log into your Canvas account and click on your profile picture.</li>
+      <li>Click on Settings.</li>
+      <li>Scroll to <b>Approved Integrations</b> and click <b>New access token</b> at the bottom.</li>
+      <li>Give your token a name and set an expiration date. Click <b>Generate Token</b>.</li>
+      <li><b>Copy the token (string of letters and numbers) and paste it into the box below.</b></li>
+      </ol>
+      
+      <form id="personalApiKey">
+        Api Key: <input type="text" name="key" value="" />
+        Canvas URL: <input type="text" name="base" value="" placeholder="https://school.instructure.com" />
+        <input class="action" type="submit" value="Save Settings" onclick="event.preventDefault(); google.script.run.withSuccessHandler(onSuccess).storePersonalKey(this.parentNode)" />
       </form>
     </div>
     <script>

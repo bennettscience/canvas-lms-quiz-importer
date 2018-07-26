@@ -5,12 +5,17 @@
     <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css">
   </head>
   <body>
-    <h2>Canvas Quiz Uploader</h2>
-    <p>This Addon allows you to upload quiz questions to your Canvas courses. It uses a personal or school-configured access code so you don't have to copy and paste materials.</p>
-    <p>To connect, go through the Setup steps in the Addon Menu.</p>
+    <p>This spreadsheet allows you to upload quiz questions or Outomes to your Canvas courses. It uses a personal access code so you don't have to copy and paste materials.</p>
+    <p>To connect, go through the Setup steps.</p>
     <hr />
-    <h2>After you connect...</h2>
-    <p>Once you connect your account, the Addon will automatically pull from your Canvas courses and quizzes. Questions are uploaded to existing quizzes, so <b>you need to create the Quiz in your course first.</b> This may be added as an improvement in the future.</p>
-    <p>If you run into problems, you can request help by <a href="mailto:brian@ohheybrian.com">emailing the developer</a> or <a href="https://github.com/bennettscience/canvas-lms-quiz-importer/issues" target="_blank">filing an issue</a>. 
+    <h2>Quizzes</h2>
+    <p>Canvas only allows questions to be uploaded directly to an existing quiz. To use the QuizTemplate sheet, you need to first create the quiz in your course. Write your questions in the spreadsheet. All fields are required.</p>
+    <b>The only supported questions types are multiple choice or true/false at this time.</b>
+    <p>Open the Quiz Item Upload sidebar and choose your course and quiz. If you add any questions, use the Rescan sheet button to update the question count before running the upload.</p>
+    <h2>Outcomes</h2>
+    <p>Outcomes have to be added to an existing Outcome Group (folder). Create any folders you would like in your account before attempting to upload. Use the OutcomeTemplate sheet and add your outcomes.</p>
+    <b>Outcomes scored on decaying_average or n_mastery require a calculation weight.</b>
+    <p>Open the Outcome Upload sidebar and choose the course you want to add outcomes to. If you add any before uploading, use the Rescan sheet button to update the number of items to post.</p>
+    <p>This is a beta release, so you may encounter problems. You can request help by <a href="mailto:brian@ohheybrian.com">emailing the developer</a> or <a href="https://github.com/bennettscience/canvas-lms-quiz-importer/issues" target="_blank">filing an issue</a>. 
   </body>
 </html>

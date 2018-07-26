@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css">
+    <style>
+      button { display:inline-block; margin-bottom:10px }
+      .hidden { display: none; }
+      span { margin-right: 10px; }
+      select { width: 95%; margin: 0 auto; }
+    </style>
+    <base target="_top">
+  </head>
+  <body>
+    <div id="main">
+      <div id="course-data">
+        <select id="courses" onchange="getOutcomes(this.value)"><option value="0">Select a course</option></select>
+      </div>
+      <div id="questions">
+        <p>Total Outcomes: <span id="num-questions"><?!= getNumItems(); ?></span></p>
+        <p>Outcomes to upload: <input title="Leave blank to upload all rows." alt="Leave blank to upload all rows." id="upload-items" value="" required/></p>
+      </div>
+      <button id="rescan" onclick="google.script.run.withSuccessHandler(refreshSheet).getNumItems()">Rescan sheet</button>
+      <button id="run" class="action" onclick="google.script.run.withSuccessHandler(loopSheet).readSheet(document.getElementById('upload-items').value, 'OutcomeTemplate')">Run</button>
+      <hr />
+      <h3>Outcome Group Codes:</h3>
+      <div id="groups"></div>
+      <h3>Next row to process:</h3>
+      <div id="status"><span id="counter"></span></div>
+      <h3>Errors:</h3>
+      <div>
+        <ul id="failure"></ul>
+      </div>
+    </div>
+    <script>
+      window.onload = function() {
+        google.script.run.withSuccessHandler(function(data) {
+          var select = document.getElementById('courses');
+          for(var i=0; i<data.length; i++) {
+            var opt = document.createElement('option');
+            opt.text = data[i].name;
+            opt.value = data[i].id;
+            select.appendChild(opt);
+          }
+        }).getClasses()
+      
+      }
+
+      function getOutcomes(id) {
+        google.script.run.withSuccessHandler(function(data) {
+          data = JSON.parse(data);
+          var groups = document.getElementById('groups')
+          groups.innerHTML = ""
+          for(var i=0; i<data.length; i++) {
+            var div = document.createElement('div');
+            div.innerHTML = "<span id='id'>" + data[i].id + "</span><span id='title'>" + data[i].title + "</span>"
+            document.getElementById('groups').appendChild(div);
+          }
+        }).getOutcomeGroups(id)
+      }
+
+      function loopSheet(data) {
+        var count = <?!= findNextRow("OutcomeTemplate"); ?>
+        
+        document.getElementById("failure").innerHTML = "";
+        
+        var courseId = document.getElementById('courses').value
+
+        for(var i=0; i<data.length; i++) {
+          google.script.run.withSuccessHandler(function() {
+            document.getElementById("counter").innerHTML = count;
+          }).withFailureHandler(function(msg) {
+            document.getElementById("failure").innerHTML += "<li>" + msg + "</li>";
+          }).postOutcome(data[i], count, courseId);
+          count++
+        }
+      }
+      
+      function refreshSheet(count) {
+        document.getElementById('num-questions').innerHTML = count
+      }
+    </script>
+  </body>
+</html>
+
+

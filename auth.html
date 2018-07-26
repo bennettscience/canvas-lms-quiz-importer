@@ -1,6 +1,0 @@
-<p>Enter you Canvas url</p>
-<div id="current">Current: <b><?= PropertiesService.getDocumentProperties().getProperty("base"); ?></b></div>
-<input type="text" id="base" value="" placeholder="https://yourinstitute.instructure.com" />
-<button class="action" onclick="validateText(document.getElementById('base').value)">Set URL</button>
-<button onclick="google.script.run.withSuccessHandler(showMsg).clearBaseUrl(); document.getElementById('login').innerHTML=''">Clear current URL</button>
-<div id="result"></div>

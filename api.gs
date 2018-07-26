@@ -9,7 +9,7 @@
  * @returns String - user-defined base URL appended with the Canvas API endpoint
  */
 function getBase() {
-  return PropertiesService.getDocumentProperties().getProperty("base") + "/api/v1/"
+  return PropertiesService.getUserProperties().getProperty("base");
 }
 
 
@@ -21,13 +21,7 @@ function getBase() {
  * @property Content-Type - define 'application/json'
  */
 function auth() {
-  var props = getProps();
-  if(props.auth == "school") {
-    var canvasService = getCanvasService();
-    var key = canvasService.getAccessToken();
-  } else {
-    key = props.key
-  }
+  var key = PropertiesService.getUserProperties().getProperty("key");
 
   var headers = {
     "Authorization": "Bearer " + key,
@@ -46,7 +40,7 @@ function auth() {
  * @returns {resp}          response object
  */
 function get(url, payload) {
-  url = getBase() + url
+  url = getBaseUrl() + url
 
   // build the request object
   var options = {
@@ -54,7 +48,11 @@ function get(url, payload) {
     "headers": auth(),
     "payload": payload,
     "muteHttpExceptions":false
+    
   }
+  
+  Logger.log(options)
+  Logger.log(url)
 
   var resp = UrlFetchApp.fetch(url, options)
 
@@ -70,7 +68,10 @@ function get(url, payload) {
  * @returns {Obj}           response object
  */
 function post(url, payload) {
-  url = getBase() + url;
+  var url = getBaseUrl() + url;
+  
+  Logger.log(url);
+  Logger.log(payload);
 
   var options = {
     "method":"post",
@@ -79,14 +80,13 @@ function post(url, payload) {
     "muteHttpExceptions": true
   }
 
-    var response = UrlFetchApp.fetch(url, options)
-    var code = response.getResponseCode();
-    if(code === 200) {
-      return true
-    } else {
-      var error = response.getContentText()
-      error = JSON.parse(error)
-      throw new Error(error.errors[0].message)
-    }
-
+  var response = UrlFetchApp.fetch(url, options)
+  var code = response.getResponseCode();
+  if(code === 200) {
+    return true
+  } else {
+    var error = response.getContentText()
+    error = JSON.parse(error)
+    throw new Error(error.errors[0].message)
+  }
 }
