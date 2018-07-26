@@ -239,6 +239,14 @@ function spreadsheetSetup() {
     sheet.setColumnWidths(2, 2, 300)
     sheet.setFrozenRows(1);  
   }
+  if(ss.getSheetByName("RubricScoring") == null) {
+    sheet = ss.insertSheet("RubricScoring");
+    
+    sheet.getRange(1, 1, 1, 2).setValues(['Description', 'Points']);
+    sheet.setColumnWidths(1, 1, 300);
+    sheet.setFrozenRows(1);
+  }
+    
   return true;
 }
 
