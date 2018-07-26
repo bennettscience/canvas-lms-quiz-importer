@@ -6,6 +6,8 @@ This script allows you to interact with your Canvas Quizzes and Outcomes to bulk
 You need a Canvas API key for your account. Follow the instructions in the Setup menu to connect.
 If you want to disconnect your account, use the Logout button to clear your API key.
 
+You can [make a copy](https://docs.google.com/spreadsheets/d/1A2xSFxkc7aUpv7J8vXgxkq1b_0roqQ7Mb4L4rFhbCc0/copy) of the template project or you can copy and paste all code files into your own spreadsheet. Running the **setup** function will create all necessary spreadsheet templates.
+
 ## Quizzes
 Canvas only allows questions to be uploaded directly to an existing quiz. To use the QuizTemplate sheet, you need to first create the quiz in your course.
 Write your questions in the spreadsheet. All fields are required.
