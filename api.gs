@@ -3,20 +3,11 @@
  * All API requests are routed through the REST methods below
  */
 
-/**
- * getBase - Get the base URL string stored in PropertiesService
- *
- * @returns String - user-defined base URL appended with the Canvas API endpoint
- */
-function getBase() {
-  return PropertiesService.getUserProperties().getProperty("base");
-}
-
 
 /**
  * auth - Construct REST authorization header
  *
- * @returns {Obj} headers
+ * @returns {Object} headers
  * @property Authorization - "Bearer " + user API key value
  * @property Content-Type - define 'application/json'
  */
@@ -34,9 +25,8 @@ function auth() {
 
 /**
  * get - generic GET request to the Canvas API
- *
  * @param  {String} url     endpoint for the request
- * @param  {Obj} payload    data object
+ * @param  {Object} payload    data object
  * @returns {resp}          response object
  */
 function get(url, payload) {
@@ -48,11 +38,7 @@ function get(url, payload) {
     "headers": auth(),
     "payload": payload,
     "muteHttpExceptions":false
-    
   }
-  
-  Logger.log(options)
-  Logger.log(url)
 
   var resp = UrlFetchApp.fetch(url, options)
 
@@ -64,14 +50,11 @@ function get(url, payload) {
  * post - generic POST request to the Canvas API
  *
  * @param  {String} url     request endpoint
- * @param  {Obj} payload    data to POST to the endpoint
- * @returns {Obj}           response object
+ * @param  {Object} payload    data to POST to the endpoint
+ * @returns {Object}           response object
  */
 function post(url, payload) {
   var url = getBaseUrl() + url;
-  
-  Logger.log(url);
-  Logger.log(payload);
 
   var options = {
     "method":"post",
@@ -82,6 +65,7 @@ function post(url, payload) {
 
   var response = UrlFetchApp.fetch(url, options)
   var code = response.getResponseCode();
+  
   if(code === 200) {
     return true
   } else {
